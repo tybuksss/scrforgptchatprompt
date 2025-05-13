@@ -2685,30 +2685,11 @@ public class BrawlManager : MonoBehaviour
             else
                 rankImage.color = rankColors[8];
         }
-    }
 
-    public void UpdateWinRankVisuals(int trophies)
-    {
-        int rank = Mathf.Clamp((trophies / 100) + 1, 1, 50);
-
-        WinRankText.text = rank.ToString();
-
-        if (rank - 1 < rankColors.Length)
-            WinRankText.color = rankColors[rank - 1];
-        else
-            WinRankText.color = Color.white;
-
-        if (rank == 50)
+        if (WinRankText != null)
         {
-            WinRankImage.sprite = specialSprite50;
-        }
-        else if (rank >= 45)
-        {
-            WinRankImage.sprite = specialSprite45to49;
-        }
-        else
-        {
-            WinRankImage.sprite = defaultRankSprite;
+            int winrank = Mathf.Clamp(trophies / 50 + 1, 1, 50);
+            WinRankText.text = winrank.ToString();
         }
     }
 
