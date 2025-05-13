@@ -1,0 +1,3352 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using YG;
+using System;
+using TMPro;
+using Unity.VisualScripting;
+using System.Reflection;
+using Unity.Mathematics;
+using Newtonsoft.Json.Linq;
+
+public class BrawlManager : MonoBehaviour
+{
+    [Header("Panels")]
+    [SerializeField] private GameObject Background;
+    [SerializeField] private GameObject Alert;
+    [SerializeField] private GameObject BlackLine;
+    [SerializeField] private GameObject Values;
+    [SerializeField] private GameObject Buttons;
+    [SerializeField] private GameObject Starrdrop;
+    [SerializeField] private GameObject BrawlerSetting;
+    [SerializeField] private GameObject Loot;
+    [SerializeField] private GameObject Shop;
+    [SerializeField] private GameObject Promocodes;
+    [SerializeField] private GameObject Settings;
+    [SerializeField] private GameObject BrawlPass;
+    [SerializeField] private GameObject ProPass;
+    [SerializeField] private GameObject Achievements;
+    [SerializeField] private GameObject Quests;
+    [SerializeField] private GameObject StarrRoad;
+    [SerializeField] private GameObject Leaderboard;
+    [SerializeField] private GameObject Rewards;
+    [SerializeField] private GameObject Choose;
+
+    [Header("Gifts")]
+    [SerializeField] private GameObject UpgradeChanceText;
+    [SerializeField] private GameObject UpgradeChance1;
+    [SerializeField] private GameObject UpgradeChance2;
+    [SerializeField] private GameObject UpgradeChance3;
+    [SerializeField] private GameObject UpgradeChance4;
+
+    [SerializeField] private GameObject UpgradeUsed1;
+    [SerializeField] private GameObject UpgradeUsed2;
+    [SerializeField] private GameObject UpgradeUsed3;
+    [SerializeField] private GameObject UpgradeUsed4;
+
+    [SerializeField] private GameObject RareText;
+    [SerializeField] private GameObject SuperrareText;
+    [SerializeField] private GameObject EpicText;
+    [SerializeField] private GameObject MythicText;
+    [SerializeField] private GameObject LegendaryText;
+
+    [SerializeField] private GameObject SDObject;
+    [SerializeField] private Animator SDAnimator;
+
+    [SerializeField] private GameObject BObject;
+    [SerializeField] private TMP_Text RemainingItemsText;
+    [SerializeField] private Button NextItemButton;
+    [SerializeField] private Image boxImage;
+    [SerializeField] private Sprite[] boxSprites;
+    [SerializeField] private GameObject ForBoxes;
+    [SerializeField] private Animator boxAnimator;
+
+    [Header("Loot")]
+    [SerializeField] private GameObject Profile;
+    [SerializeField] private GameObject Brawlers;
+    [SerializeField] private GameObject Skins;
+    [SerializeField] private GameObject[] Skins1;
+    [SerializeField] private GameObject Pins;
+    [SerializeField] private GameObject Pins1;
+    [SerializeField] private GameObject Pins2;
+    [SerializeField] private GameObject Pins3;
+    [SerializeField] private GameObject Icons;
+    [SerializeField] private GameObject Icons1;
+    [SerializeField] private GameObject Icons2;
+    [SerializeField] private GameObject Icons3;
+    [SerializeField] private GameObject Sprays;
+    [SerializeField] private GameObject Sprays1;
+    [SerializeField] private GameObject Sprays2;
+    //[SerializeField] private GameObject Titles;
+
+    [SerializeField] private GameObject LootBrawlers;
+    [SerializeField] private GameObject LootSkins;
+    [SerializeField] private GameObject LootPins;
+    [SerializeField] private GameObject LootIcons;
+    [SerializeField] private GameObject LootSprays;
+    [SerializeField] private GameObject LootTitles;
+    [SerializeField] private GameObject LootGems;
+    [SerializeField] private GameObject LootCredits;
+    [SerializeField] private GameObject LootCoins;
+
+    [SerializeField] private GameObject[] MyBrawlers;
+    [SerializeField] private GameObject[] MySkins;
+    [SerializeField] private GameObject[] MyPins;
+    [SerializeField] private GameObject[] MyIcons;
+    [SerializeField] private GameObject[] MySprays;
+    [SerializeField] private GameObject[] MyTitles;
+
+    [Header("Catalog")]
+    /*
+    [SerializeField] private GameObject CatalogBrawlers;
+    [SerializeField] private GameObject CatalogSkins;
+    [SerializeField] private GameObject CatalogSpecials;
+    [SerializeField] private GameObject CatalogPins;
+    [SerializeField] private GameObject CatalogIcons;
+    [SerializeField] private GameObject CatalogSprays;
+    [SerializeField] private GameObject CatalogTitles;*/
+
+    [Header("Images/Sprites")]
+    [SerializeField] private Image GiftButton;
+    [SerializeField] private Image BG;
+
+    [SerializeField] private Image EditMusic;
+    [SerializeField] private Image EditSounds;
+
+    [SerializeField] private Sprite RareBG;
+    [SerializeField] private Sprite SuperrareBG;
+    [SerializeField] private Sprite EpicBG;
+    [SerializeField] private Sprite MythicBG;
+    [SerializeField] private Sprite LegendaryBG;
+
+    [SerializeField] private Sprite On;
+    [SerializeField] private Sprite Off;
+
+    [SerializeField] private Sprite OpenedLevel;
+
+    [Header("Texts")]
+    [SerializeField] private TMP_Text Gems;
+    [SerializeField] private TMP_Text Coins;
+    [SerializeField] private TMP_Text Credits;
+    [SerializeField] private TMP_Text Count;
+    [SerializeField] private TMP_Text Count1;
+    [SerializeField] private TMP_Text Count2;
+    [SerializeField] private TMP_Text Count3;
+    [SerializeField] private TMP_Text TotalTrophies;
+    [SerializeField] private Text NowTrophies;
+    [SerializeField] private TMP_Text Trophies;
+    [SerializeField] private TMP_Text Name;
+    [SerializeField] private Text Name1;
+    [SerializeField] private TMP_Text TotalSD;
+    [SerializeField] private TMP_Text TotalB;
+    [SerializeField] private TMP_Text TotalBB;
+    [SerializeField] private TMP_Text TotalMB;
+    [SerializeField] private TMP_Text TotalOB;
+    [SerializeField] private TMP_Text Wins3v3;
+    [SerializeField] private TMP_Text WinsSolo;
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource MainSource;
+    [SerializeField] private AudioSource MusicSource;
+    [SerializeField] private AudioClip Click;
+    [SerializeField] private AudioClip Open;
+    [SerializeField] private AudioClip OpenGift;
+
+    [SerializeField] private AudioClip boxOpenSound;
+    [SerializeField] private AudioClip coinsCreditsSound;
+    [SerializeField] private AudioClip gemsSound;
+    [SerializeField] private AudioClip pinsIconsSound;
+    [SerializeField] private AudioClip skinsSound;
+    [SerializeField] private AudioClip boxEnterSound;
+
+    [Header("Shop")]
+    [SerializeField] private Button ChannelReward;
+
+    [Header("Promo")]
+    [SerializeField] private InputField PromocodesInputField;
+    [SerializeField] private Text PromocodesInputText;
+
+    [Header("BrawlPass")]
+    [SerializeField] private Button BuyBrawlPass;
+    [SerializeField] private GameObject BPCounter;
+    [SerializeField] private GameObject BPCountComplete;
+    [SerializeField] private GameObject BPCountObj;
+    [SerializeField] private TMP_Text BPCount;
+    [SerializeField] private TMP_Text BPCount1;
+    [SerializeField] private TMP_Text LevelBP;
+    [SerializeField] private Image Progress;
+
+    [SerializeField] private Image[] LevelsBP;
+    [SerializeField] private Button[] FreeBP;
+    [SerializeField] private Button[] PaidBP;
+
+    [Header("Ad")]
+    [SerializeField] private GameObject FullscreenAd;
+    [SerializeField] private GameObject Ad1;
+    [SerializeField] private GameObject Ad2;
+    [SerializeField] private GameObject Ad3;
+
+    [Header("Win Screen")]
+    [SerializeField] private GameObject Win;
+    [SerializeField] private Image WinRankImage;
+    [SerializeField] private TMP_Text WinRankText;
+    [SerializeField] private TMP_Text WinTrophiesText;
+    [SerializeField] private TMP_Text WinTrophiesChangeText;
+    [SerializeField] private GameObject WinVictoryObject;
+    [SerializeField] private GameObject WinDefeatObject;
+    [SerializeField] private Sprite[] WinRankSprites;
+
+    [Header("Other")]
+    [SerializeField] private Button GtButton;
+    [SerializeField] private int Place;
+    [SerializeField] private Image CurrentBrawler;
+    [SerializeField] private Image CurrentPin;
+    [SerializeField] private Image CurrentPin1;
+    [SerializeField] private Image CurrentIcon;
+    [SerializeField] private Image CurrentIcon1;
+    [SerializeField] private Image CurrentIcon2;
+    [SerializeField] private Image CurrentSpray;
+    [SerializeField] private Image CurrentSpray1;
+    [SerializeField] private Sprite[] BrawlerSprites;
+    [SerializeField] private Sprite[] SkinSprites;
+    [SerializeField] private Sprite[] PinSprites;
+    [SerializeField] private Sprite[] IconSprites;
+    [SerializeField] private Sprite[] SpraySprites;
+    [SerializeField] private Image rankImage;
+    [SerializeField] private Image trophyBar;
+    [SerializeField] private TMP_Text rankText;
+    [SerializeField] private Color[] rankColors;
+    [SerializeField] private Sprite defaultRankSprite;
+    [SerializeField] private Sprite specialSprite45to49;
+    [SerializeField] private Sprite specialSprite50;
+    [SerializeField] private TMP_Text[] QuestTexts = new TMP_Text[4];
+    [SerializeField] private TMP_Text[] QuestSeriaTexts = new TMP_Text[4];
+    [SerializeField] private Image[] QuestFills = new Image[4];
+    [SerializeField] private Image[] TrophyFills = new Image[45];
+    [SerializeField] private Button[] SRButtons = new Button[45];
+    [SerializeField] private Button[] rewardButtons;
+    [SerializeField] private TMP_Text[] rewardTimers;
+    [SerializeField] private Text nearestReward;
+    [SerializeField] private GameObject[] GameModes;
+    [SerializeField] private TMP_Text[] TrophiesTexts = new TMP_Text[14];
+
+    private bool isOpeningGift = false;
+    private bool canOpenBox = true;
+    private int remainingItems;
+    private List<string> lootQueue = new List<string>();
+
+    private void OnEnable()
+    {
+        YandexGame.GetDataEvent += GetLoad;
+        YG2.onRewardAdv += Rewarded;
+        YG2.onPurchaseSuccess += SuccessPurchased;
+    }
+    private void OnDisable()
+    {
+        YandexGame.GetDataEvent -= GetLoad;
+        YG2.onRewardAdv -= Rewarded;
+        YG2.onPurchaseSuccess -= SuccessPurchased;
+    }
+
+    private void Awake()
+    {
+        YG2.ConsumePurchases();
+        if (SceneManager.GetActiveScene().name == "SampleScene")
+        {
+            StartCoroutine(saveLB());
+            StartCoroutine(timerReward());
+        }
+    }
+
+    public void Start()
+    {
+        NextItemButton.onClick.AddListener(OpenNextLootItem);
+        StartCoroutine(InGameTimeCounter());
+        GetLoad();
+    }
+
+    /*IEnumerator fullscreenAd()
+    {
+        if (timeToAd > 0)
+        {
+            yield return new WaitForSeconds(1);
+            if (isGift && !YG2.nowAdsShow) timeToAd--;
+        }
+        else
+        {
+            if (isGift && !YG2.nowAdsShow)
+            {
+                FullscreenAd.gameObject.SetActive(true);
+                Ad1.SetActive(true);
+                yield return new WaitForSeconds(1);
+                Ad1.SetActive(false);
+                Ad2.SetActive(true);
+                yield return new WaitForSeconds(1);
+                Ad2.SetActive(false);
+                Ad3.SetActive(true);
+                YandexGame.FullscreenShow();
+                FullscreenAd.gameObject.SetActive(false);
+                Ad3.SetActive(false);
+                yield return new WaitForSeconds(1);
+                timeToAd = 60;
+            }
+        }
+        StartCoroutine(fullscreenAd());
+    }*/
+
+    int used = 0;
+    int rarity = 0;
+    bool readyToOpen = false;
+
+    private readonly int[] trophyMilestones = new int[45]
+    {
+        500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000,
+        6000, 7000, 8000, 9000, 10000, 12000, 14000, 16000, 18000, 20000,
+        22000, 24000, 26000, 28000, 30000, 32000, 34000, 36000, 38000, 40000,
+        42000, 44000, 46000, 48000, 50000, 55000, 60000, 65000, 70000, 75000,
+        80000, 85000, 90000, 95000, 100000
+    };
+
+    private readonly int[] rewardTimes = { 60, 300, 600, 1800 };
+
+    private static readonly Dictionary<int, int> SkinToBrawlerMap = new Dictionary<int, int>
+    {
+        { 0, 0 }, { 1, 0 }, { 2, 0 },
+        { 3, 1 }, { 4, 1 }, { 5, 1 },
+        { 6, 2 }, { 7, 2 }, { 8, 2 },
+        { 30, 3 }, { 31, 3 }, { 32, 3 },
+        { 9, 4 }, {10, 4 }, {11, 4 },
+        {12, 5 }, {13, 5 }, {14, 5 },
+        {15, 6 }, {16, 6 }, {17, 6 },
+        {18, 7 }, {19, 7 }, {20, 7 },
+        {21, 8 }, {22, 8 }, {23, 8 },
+        {24, 9 }, {25, 9 }, {26, 9 },
+        {27,10 }, {28,10 }, {29,10 },
+        {33,11 }, {34,11 }, {35,11 },
+        {36,12 }, {37,12 }, {38,12 },
+        {39,13 }, {40,13 }, {41,13 },
+    };
+
+    private IEnumerator InGameTimeCounter()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            YG2.saves.inGameTime++;
+            YG2.SaveProgress();
+            if (Rewards) GetLoad();
+        }
+    }
+
+    public void ClaimReward(int i)
+    {
+        Place = 4;
+        if (YG2.saves.AwardGot[i]) return;
+
+        if (i == 0)
+        {
+            GiveRewardByType("Gems", 50);
+        }
+        else if (i == 1)
+        {
+            openSD();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (i == 2)
+        {
+            openBox(1);
+            MainSource.PlayOneShot(boxEnterSound);
+        }
+        else if (i == 3)
+        {
+            openBox(2);
+            MainSource.PlayOneShot(boxEnterSound);
+        }
+
+        YG2.saves.AwardGot[i] = true;
+        YG2.SaveProgress();
+        GetLoad();
+    }
+
+    public void GiftOpen(bool upgrade)
+    {
+        if (isOpeningGift) return;
+        isOpeningGift = true;
+
+        if (readyToOpen)
+        {
+            StartCoroutine(animationSD());
+            return;
+        }
+
+        if (!upgrade)
+        {
+            int chance = UnityEngine.Random.Range(0, 100) + 1;
+
+            if (chance >= 87)
+            {
+                if (rarity == 0)
+                {
+                    if (used == 1) { used = 2; rarity = 2; }
+                    else if (used == 2) { used = 3; rarity = 2; }
+                    else if (used == 3) { used = 4; rarity = 2; }
+                    RareText.SetActive(false);
+                    EpicText.SetActive(true);
+                }
+                else if (rarity == 1)
+                {
+                    if (used == 1) { used = 2; rarity = 3; }
+                    else if (used == 2) { used = 3; rarity = 3; }
+                    else if (used == 3) { used = 4; rarity = 3; }
+                    SuperrareText.SetActive(false);
+                    MythicText.SetActive(true);
+                }
+                else if (rarity >= 2)
+                {
+                    used = 4;
+                    rarity = 4;
+                    EpicText.SetActive(false);
+                    MythicText.SetActive(false);
+                    LegendaryText.SetActive(true);
+                    UpgradeChanceText.SetActive(false);
+                    UpgradeChance1.SetActive(false);
+                    UpgradeChance2.SetActive(false);
+                    UpgradeChance3.SetActive(false);
+                    UpgradeChance4.SetActive(false);
+                    UpgradeUsed1.SetActive(false);
+                    UpgradeUsed2.SetActive(false);
+                    UpgradeUsed3.SetActive(false);
+                    UpgradeUsed4.SetActive(true);
+                }
+                checkRarity();
+            }
+            else if (chance >= 72)
+            {
+                used++;
+                rarity++;
+                checkRarity();
+            }
+            else
+            {
+                used++;
+                checkRarity();
+            }
+
+            if (used == 1)
+            {
+                UpgradeChance1.SetActive(false);
+                UpgradeUsed1.SetActive(true);
+            }
+            else if (used == 2)
+            {
+                UpgradeChance2.SetActive(false);
+                UpgradeUsed2.SetActive(true);
+            }
+            else if (used == 3)
+            {
+                UpgradeChance3.SetActive(false);
+                UpgradeUsed3.SetActive(true);
+            }
+            else if (used == 4)
+            {
+                UpgradeChanceText.SetActive(false);
+                UpgradeChance1.SetActive(false);
+                UpgradeChance2.SetActive(false);
+                UpgradeChance3.SetActive(false);
+                UpgradeChance4.SetActive(false);
+                UpgradeUsed1.SetActive(false);
+                UpgradeUsed2.SetActive(false);
+                UpgradeUsed3.SetActive(false);
+                UpgradeUsed4.SetActive(true);
+                readyToOpen = true;
+            }
+
+            StartCoroutine(disableInteractable());
+            MainSource.PlayOneShot(Open);
+            StartCoroutine(ReenableGiftOpen());
+        }
+        else
+        {
+            checkRarity();
+
+            if (used == 1)
+            {
+                UpgradeChance1.SetActive(false);
+                UpgradeUsed1.SetActive(true);
+            }
+            else if (used == 2)
+            {
+                UpgradeChance2.SetActive(false);
+                UpgradeUsed2.SetActive(true);
+            }
+            else if (used == 3)
+            {
+                UpgradeChance3.SetActive(false);
+                UpgradeUsed3.SetActive(true);
+            }
+            else if (used == 4)
+            {
+                UpgradeChanceText.SetActive(false);
+                UpgradeChance1.SetActive(false);
+                UpgradeChance2.SetActive(false);
+                UpgradeChance3.SetActive(false);
+                UpgradeChance4.SetActive(false);
+                UpgradeUsed1.SetActive(false);
+                UpgradeUsed2.SetActive(false);
+                UpgradeUsed3.SetActive(false);
+                UpgradeUsed4.SetActive(true);
+                readyToOpen = true;
+            }
+
+            StartCoroutine(disableInteractable());
+            MainSource.PlayOneShot(Open);
+            StartCoroutine(ReenableGiftOpen());
+        }
+    }
+
+    IEnumerator animationSD()
+    {
+        MainSource.PlayOneShot(OpenGift);
+        SDAnimator.Play("ZoomIn");
+        yield return new WaitForSeconds(0.6f);
+        lootGt(rarity);
+        YG2.saves.OpenedSD++;
+        isOpeningGift = false;
+    }
+
+    IEnumerator BoxOpenAnimation()
+    {
+        MainSource.PlayOneShot(boxOpenSound);
+        boxAnimator.Play("ZoomIn");
+        yield return new WaitForSeconds(1);
+        RemainingItemsText.text = (remainingItems).ToString();
+        NextItemButton.interactable = true;
+        BObject.SetActive(false);
+        Loot.SetActive(true);
+        HideAllLootImmediately();
+
+        if (lootQueue.Count > 0)
+        {
+            OpenNextLootItem();
+        }
+    }
+
+    IEnumerator ReenableGiftOpen()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isOpeningGift = false;
+    }
+
+    public void PlayGame()
+    {
+        switch (YG2.saves.CurrentGM)
+        {
+            case 0: SceneManager.LoadScene("Gemgrab"); break;
+            case 1: SceneManager.LoadScene("Showdown"); break;
+            case 2: SceneManager.LoadScene("Knockout"); break;
+        }
+    }
+
+    void checkRarity()
+    {
+        RareText.SetActive(rarity == 0);
+        SuperrareText.SetActive(rarity == 1);
+        EpicText.SetActive(rarity == 2);
+        MythicText.SetActive(rarity == 3);
+        LegendaryText.SetActive(rarity == 4);
+
+        switch (rarity)
+        {
+            case 0: BG.sprite = RareBG; break;
+            case 1: BG.sprite = SuperrareBG; break;
+            case 2: BG.sprite = EpicBG; break;
+            case 3: BG.sprite = MythicBG; break;
+            case 4: BG.sprite = LegendaryBG; break;
+        }
+
+        float scale = 1f + 0.025f * rarity;
+        SDObject.transform.localScale = new Vector3(scale, scale, 1);
+    }
+
+    void lootGt(int rarity)
+    {
+        YG2.saves.Quests[0]++;
+        int chance = UnityEngine.Random.Range(0, 20 * (rarity + 1)) + 1;
+
+        UpgradeUsed4.gameObject.SetActive(false);
+        Alert.SetActive(false);
+        Values.SetActive(false);
+        Buttons.SetActive(false);
+        Starrdrop.SetActive(false);
+        Shop.SetActive(false);
+        Loot.SetActive(true);
+
+        if (chance >= 90)
+        {
+            LootGems.SetActive(true);
+            int drop = UnityEngine.Random.Range(3 * (rarity + 1), 30 * (rarity + 1));
+            Count.text = "x" + drop;
+            YG2.saves.Gems += drop;
+        }
+        else if (chance >= 80)
+        {
+            LootCredits.SetActive(true);
+            int drop = UnityEngine.Random.Range(5 * (rarity + 1), 50 * (rarity + 1));
+            Count1.text = "x" + drop;
+            YG2.saves.Credits += drop;
+        }
+        else if (chance >= 65)
+        {
+            List<int> availableSprays = new List<int>();
+            for (int i = 0; i < YG2.saves.Sprays.Length; i++)
+                if (!YG2.saves.Sprays[i]) availableSprays.Add(i);
+
+            if (availableSprays.Count > 0)
+            {
+                int index = availableSprays[UnityEngine.Random.Range(0, availableSprays.Count)];
+                LootSprays.SetActive(true);
+                LootSprays.transform.GetChild(index).gameObject.SetActive(true);
+                YG2.saves.Sprays[index] = true;
+            }
+            else
+            {
+                LootCoins.SetActive(true);
+                int drop = UnityEngine.Random.Range(7 * (rarity + 1), 50 * (rarity + 1));
+                Count2.text = "x" + drop;
+                YG2.saves.Coins += drop;
+            }
+        }
+        else if (chance >= 50)
+        {
+            List<int> availableIcons = new List<int>();
+            for (int i = 15; i < YG2.saves.Icons.Length; i++)
+                if (!YG2.saves.Icons[i]) availableIcons.Add(i);
+
+            if (availableIcons.Count > 0)
+            {
+                int index = availableIcons[UnityEngine.Random.Range(0, availableIcons.Count)];
+                LootIcons.SetActive(true);
+                LootIcons.transform.GetChild(index).gameObject.SetActive(true);
+                YG2.saves.Icons[index] = true;
+            }
+            else
+            {
+                LootCoins.SetActive(true);
+                int drop = UnityEngine.Random.Range(7 * (rarity + 1), 50 * (rarity + 1));
+                Count2.text = "x" + drop;
+                YG2.saves.Coins += drop;
+            }
+        }
+        else if (chance >= 40)
+        {
+            List<int> availablePins = new List<int>();
+            for (int i = 10; i < YG2.saves.Pins.Length; i++)
+                if (!YG2.saves.Pins[i]) availablePins.Add(i);
+
+            if (availablePins.Count > 0)
+            {
+                int index = availablePins[UnityEngine.Random.Range(0, availablePins.Count)];
+                LootPins.SetActive(true);
+                LootPins.transform.GetChild(index).gameObject.SetActive(true);
+                YG2.saves.Pins[index] = true;
+            }
+            else
+            {
+                LootCoins.SetActive(true);
+                int drop = UnityEngine.Random.Range(10 * (rarity + 1), 100 * (rarity + 1));
+                Count2.text = "x" + drop;
+                YG2.saves.Coins += drop;
+            }
+        }
+        else
+        {
+            LootCoins.SetActive(true);
+            int drop = UnityEngine.Random.Range(10 * (rarity + 1), 100 * (rarity + 1));
+            Count2.text = "x" + drop;
+            YG2.saves.Coins += drop;
+        }
+        YG2.SaveProgress();
+        GetLoad();
+    }
+
+    public void LootBox()
+    {
+        if (canOpenBox)
+        {
+            YG2.saves.Quests[1]++;
+            string spriteName = boxImage.sprite.name.ToLower();
+            int itemCount = 2;
+
+            switch (spriteName)
+            {
+                case "small_box": itemCount = 2; break;
+                case "big_box": itemCount = 3; break;
+                case "mega_box": itemCount = 5; break;
+                case "omega_box": itemCount = 10; break;
+                default: Debug.LogWarning("Неизвестное имя спрайта: " + spriteName); break;
+            }
+
+            remainingItems = itemCount;
+            lootQueue.Clear();
+
+            List<string> allowedTypes;
+
+            if (itemCount == 2)
+            {
+                allowedTypes = new List<string> { "Coins", "Gems", "Credits" };
+                DistributeLootWithEqualChance(allowedTypes, itemCount);
+            }
+            else if (itemCount == 3)
+            {
+                allowedTypes = new List<string> { "Coins", "Gems", "Credits", "Pins", "Icons" };
+                DistributeLootWithCustomChance(allowedTypes, itemCount, new string[] { "Pins", "Icons" }, 10);
+            }
+            else if (itemCount == 5)
+            {
+                allowedTypes = new List<string> { "Coins", "Gems", "Credits", "Pins", "Icons", "Sprays", "Skins" };
+                DistributeLootWithCustomChance(allowedTypes, itemCount, new string[] { "Pins", "Icons", "Sprays", "Skins" }, 10);
+            }
+            else if (itemCount == 10)
+            {
+                allowedTypes = new List<string> { "Coins", "Gems", "Credits", "Pins", "Icons", "Sprays", "Skins" };
+                DistributeLootWithCustomChance(allowedTypes, itemCount, new string[] { "Pins", "Icons", "Sprays", "Skins" }, 20);
+            }
+            else
+            {
+                allowedTypes = new List<string> { "Coins", "Gems", "Credits" };
+                DistributeLootWithEqualChance(allowedTypes, itemCount);
+            }
+
+            StartCoroutine(BoxOpenAnimation());
+        }
+        canOpenBox = false;
+    }
+
+    private void DistributeLootWithEqualChance(List<string> allowedTypes, int itemCount)
+    {
+        for (int i = 0; i < itemCount; i++)
+        {
+            string type = allowedTypes[UnityEngine.Random.Range(0, allowedTypes.Count)];
+            lootQueue.Add(type);
+        }
+    }
+
+    private void DistributeLootWithCustomChance(List<string> allowedTypes, int itemCount, string[] specialTypes, int specialChance)
+    {
+        int totalWeight = 0;
+        Dictionary<string, int> typeWeights = new Dictionary<string, int>();
+
+        foreach (var type in specialTypes)
+        {
+            typeWeights[type] = specialChance;
+            totalWeight += specialChance;
+        }
+
+        foreach (var type in allowedTypes)
+        {
+            if (!typeWeights.ContainsKey(type))
+            {
+                typeWeights[type] = (100 - specialChance * specialTypes.Length) / (allowedTypes.Count - specialTypes.Length);
+                totalWeight += typeWeights[type];
+            }
+        }
+
+        for (int i = 0; i < itemCount; i++)
+        {
+            int randomWeight = UnityEngine.Random.Range(0, totalWeight);
+            int cumulativeWeight = 0;
+
+            foreach (var kvp in typeWeights)
+            {
+                cumulativeWeight += kvp.Value;
+                if (randomWeight < cumulativeWeight)
+                {
+                    lootQueue.Add(kvp.Key);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void OpenNextLootItem()
+    {
+        if (lootQueue.Count == 0 && remainingItems <= 0)
+        {
+            NextItemButton.interactable = false;
+            canOpenBox = true;
+            Loot.SetActive(false);
+            BObject.SetActive(false);
+            ForBoxes.SetActive(false);
+            Back();
+            YG2.SaveProgress();
+            GetLoad();
+            return;
+        }
+
+        if (lootQueue.Count == 0 || remainingItems <= 0) return;
+
+        HideAllLootImmediately();
+        string type = lootQueue[0];
+        GiveLoot(type);
+        lootQueue.RemoveAt(0);
+        remainingItems--;
+        RemainingItemsText.text = remainingItems.ToString();
+
+        YG2.SaveProgress();
+        GetLoad();
+    }
+
+    private void HideAllLootImmediately()
+    {
+        LootCoins.SetActive(false);
+        LootGems.SetActive(false);
+        LootCredits.SetActive(false);
+        LootPins.SetActive(false);
+        LootIcons.SetActive(false);
+        LootSprays.SetActive(false);
+        LootSkins.SetActive(false);
+        LootBrawlers.SetActive(false);
+
+        HideLootChildren(YG2.saves.Pins, LootPins);
+        HideLootChildren(YG2.saves.Icons, LootIcons);
+        HideLootChildren(YG2.saves.Sprays, LootSprays);
+        HideLootChildren(YG2.saves.Skins, LootSkins);
+        HideLootChildren(YG2.saves.Brawlers, LootBrawlers);
+    }
+
+    private void HideLootChildren(bool[] collection, GameObject lootPanel)
+    {
+        for (int i = 0; i < collection.Length; i++)
+        {
+            lootPanel.transform.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
+    private void GiveLoot(string type)
+    {
+        switch (type)
+        {
+            case "Coins":
+                LootCoins.SetActive(true);
+                int coins = UnityEngine.Random.Range(10, 101);
+                Count2.text = "x" + coins;
+                YG2.saves.Coins += coins;
+                MainSource.PlayOneShot(coinsCreditsSound);
+                break;
+
+            case "Gems":
+                LootGems.SetActive(true);
+                int gems = UnityEngine.Random.Range(3, 31);
+                Count.text = "x" + gems;
+                YG2.saves.Gems += gems;
+                MainSource.PlayOneShot(gemsSound);
+                break;
+
+            case "Credits":
+                LootCredits.SetActive(true);
+                int credits = UnityEngine.Random.Range(2, 102);
+                Count1.text = "x" + credits;
+                YG2.saves.Credits += credits;
+                MainSource.PlayOneShot(coinsCreditsSound);
+                break;
+
+            case "Pins":
+                GiveCollectible(YG2.saves.Pins, LootPins, 10, pinsIconsSound);
+                break;
+
+            case "Icons":
+                GiveCollectible(YG2.saves.Icons, LootIcons, 15, pinsIconsSound);
+                break;
+
+            case "Sprays":
+                GiveCollectible(YG2.saves.Sprays, LootSprays, 0, pinsIconsSound);
+                break;
+
+            case "Skins":
+                GiveCollectible(YG2.saves.Skins, LootSkins, 0, skinsSound);
+                break;
+
+            default: break;
+        }
+    }
+
+    private void GiveCollectible(bool[] collection, GameObject lootPanel, int startIndex = 0, AudioClip sound = null)
+    {
+        List<int> available = new List<int>();
+
+        for (int i = startIndex; i < collection.Length; i++)
+        {
+            if (!collection[i])
+            {
+                if (collection == YG2.saves.Skins)
+                {
+                    if (!SkinToBrawlerMap.TryGetValue(i, out int brawlerIndex)) continue;
+                    if (!YG2.saves.Brawlers[brawlerIndex]) continue;
+                }
+                available.Add(i);
+            }
+        }
+
+        if (available.Count > 0)
+        {
+            int index = available[UnityEngine.Random.Range(0, available.Count)];
+            lootPanel.SetActive(true);
+            lootPanel.transform.GetChild(index).gameObject.SetActive(true);
+            collection[index] = true;
+            if (sound != null) MainSource.PlayOneShot(sound);
+        }
+        else
+        {
+            GiveLoot("Coins");
+        }
+    }
+
+    public void GiveRewardByType(string rewardType, int amount = -1, int index = -1)
+    {
+        BrawlPass.SetActive(false);
+        Rewards.SetActive(false);
+        Shop.SetActive(false);
+        StarrRoad.SetActive(false);
+        Values.SetActive(false);
+        Loot.SetActive(true);
+
+        switch (rewardType)
+        {
+            case "Gems":
+                LootGems.SetActive(true);
+                int gems = amount > 0 ? amount : UnityEngine.Random.Range(3, 31);
+                Count.text = "x" + gems;
+                YG2.saves.Gems += gems;
+                MainSource.PlayOneShot(gemsSound);
+                break;
+
+            case "Coins":
+                LootCoins.SetActive(true);
+                int coins = amount > 0 ? amount : UnityEngine.Random.Range(10, 101);
+                Count2.text = "x" + coins;
+                YG2.saves.Coins += coins;
+                MainSource.PlayOneShot(coinsCreditsSound);
+                break;
+
+            case "Credits":
+                LootCredits.SetActive(true);
+                int credits = amount > 0 ? amount : UnityEngine.Random.Range(2, 102);
+                Count1.text = "x" + credits;
+                YG2.saves.Credits += credits;
+                MainSource.PlayOneShot(coinsCreditsSound);
+                break;
+
+            case "Pins":
+                GiveSpecificOrRandomCollectible(YG2.saves.Pins, LootPins, 0, pinsIconsSound, index);
+                break;
+
+            case "Icons":
+                GiveSpecificOrRandomCollectible(YG2.saves.Icons, LootIcons, 0, pinsIconsSound, index);
+                break;
+
+            case "Sprays":
+                GiveSpecificOrRandomCollectible(YG2.saves.Sprays, LootSprays, 0, pinsIconsSound, index);
+                break;
+
+            case "Skins":
+                GiveSpecificOrRandomCollectible(YG2.saves.Skins, LootSkins, 0, skinsSound, index);
+                break;
+
+            case "Brawlers":
+                GiveSpecificOrRandomCollectible(YG2.saves.Brawlers, LootBrawlers, 0, skinsSound, index);
+                break;
+
+            default:
+                Debug.LogWarning("Неизвестный тип награды: " + rewardType);
+                break;
+        }
+
+        YG2.SaveProgress();
+        GetLoad();
+    }
+
+    private void GiveSpecificOrRandomCollectible(bool[] collection, GameObject lootPanel, int startIndex = 0, AudioClip sound = null, int specificIndex = -1)
+    {
+        int targetIndex = -1;
+
+        if (specificIndex >= 0 && specificIndex < collection.Length && !collection[specificIndex])
+        {
+            if (collection == YG2.saves.Skins)
+            {
+                if (!SkinToBrawlerMap.TryGetValue(specificIndex, out int brawlerIndex) || !YG2.saves.Brawlers[brawlerIndex])
+                {
+                    GiveRewardByType("Coins");
+                    return;
+                }
+            }
+
+            targetIndex = specificIndex;
+        }
+        else
+        {
+            List<int> available = new List<int>();
+            for (int i = startIndex; i < collection.Length; i++)
+            {
+                if (!collection[i])
+                {
+                    if (collection == YG2.saves.Skins)
+                    {
+                        if (!SkinToBrawlerMap.TryGetValue(i, out int brawlerIndex) || !YG2.saves.Brawlers[brawlerIndex]) continue;
+                    }
+                    available.Add(i);
+                }
+            }
+
+            if (available.Count > 0)
+            {
+                targetIndex = available[UnityEngine.Random.Range(0, available.Count)];
+            }
+        }
+
+        if (targetIndex >= 0)
+        {
+            lootPanel.SetActive(true);
+            lootPanel.transform.GetChild(targetIndex).gameObject.SetActive(true);
+            collection[targetIndex] = true;
+            if (sound != null) MainSource.PlayOneShot(sound);
+        }
+        else
+        {
+            GiveRewardByType("Coins");
+        }
+    }
+
+    public void openSD()
+    {
+        Alert.SetActive(false);
+        BrawlPass.SetActive(false);
+        Shop.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Values.SetActive(false);
+        Rewards.SetActive(false);
+        Starrdrop.SetActive(true);
+        BG.sprite = RareBG;
+        
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openBox(int type)
+    {
+        if (!canOpenBox) return;
+
+        BrawlPass.SetActive(false);
+        Rewards.SetActive(false);
+        Shop.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Values.SetActive(false);
+        BObject.SetActive(true);
+        ForBoxes.SetActive(true);
+
+        if (type >= 0 && type < boxSprites.Length)
+        {
+            boxImage.sprite = boxSprites[type];
+        }
+
+        MainSource.PlayOneShot(boxEnterSound);
+        if (type == 3) BG.sprite = LegendaryBG;
+        else if (type == 2) BG.sprite = EpicBG;
+        else BG.sprite = SuperrareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeSD()
+    {
+        Starrdrop.SetActive(false);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openShop()
+    {
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Shop.SetActive(true);
+        GetLoad();
+        BG.sprite = SuperrareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeShop()
+    {
+        Shop.SetActive(false);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openPromocodes()
+    {
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Promocodes.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closePromocodes()
+    {
+        Promocodes.SetActive(false);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openSettings()
+    {
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Values.SetActive(false);
+        Settings.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeSettings()
+    {
+        Settings.SetActive(false);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openBP()
+    {
+        GetLoad();
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        BrawlPass.SetActive(true);
+        BG.sprite = EpicBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeBP()
+    {
+        BrawlPass.SetActive(false);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        BG.sprite = RareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openQuests()
+    {
+        GetLoad();
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Quests.SetActive(true);
+        BG.sprite = EpicBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeQuests()
+    {
+        Quests.SetActive(false);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        BG.sprite = RareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openPP()
+    {
+        GetLoad();
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        ProPass.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closePP()
+    {
+        ProPass.SetActive(false);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openAchievements()
+    {
+        GetLoad();
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Alert.SetActive(false);
+        Achievements.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeAchievements()
+    {
+        Achievements.SetActive(false);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Alert.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openProfile()
+    {
+        Alert.SetActive(false);
+        Values.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Profile.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeProfile()
+    {
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Profile.SetActive(false);
+        GetLoad();
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openSR()
+    {
+        Alert.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        StarrRoad.SetActive(true);
+        BG.sprite = SuperrareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeSR()
+    {
+        Alert.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        StarrRoad.SetActive(false);
+        GetLoad();
+        BG.sprite = RareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openLB()
+    {
+        Alert.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Values.SetActive(false);
+        Leaderboard.SetActive(true);
+        BG.sprite = LegendaryBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeLB()
+    {
+        Alert.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Values.SetActive(true);
+        Leaderboard.SetActive(false);
+        GetLoad();
+        BG.sprite = RareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openRewards()
+    {
+        Alert.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Rewards.SetActive(true);
+        BG.sprite = SuperrareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeRewards()
+    {
+        Alert.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Rewards.SetActive(false);
+        GetLoad();
+        BG.sprite = RareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openChoose()
+    {
+        Alert.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Values.SetActive(false);
+        Choose.SetActive(true);
+        BG.sprite = SuperrareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeChoose()
+    {
+        Alert.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Values.SetActive(true);
+        Choose.SetActive(false);
+        GetLoad();
+        BG.sprite = RareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openBrawlers()
+    {
+        Alert.SetActive(false);
+        Values.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Brawlers.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeBrawlers()
+    {
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Brawlers.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openSkins()
+    {
+        Skins.SetActive(true);
+        for (int i = 0; i < YG2.saves.Brawlers.Length; i++) Skins1[i].SetActive(false);
+        Skins1[YG2.saves.currentBrawler].SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeSkins()
+    {
+        Skins.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openPins()
+    {
+        Alert.SetActive(false);
+        Values.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Pins.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openPins1()
+    {
+        Pins1.SetActive(true);
+        Pins2.SetActive(false);
+        Pins3.SetActive(false);
+    }
+
+    public void openPins2()
+    {
+        Pins1.SetActive(false);
+        Pins2.SetActive(true);
+        Pins3.SetActive(false);
+    }
+
+    public void openPins3()
+    {
+        Pins1.SetActive(false);
+        Pins2.SetActive(false);
+        Pins3.SetActive(true);
+    }
+
+    public void closePins()
+    {
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Pins.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openIcons()
+    {
+        Profile.SetActive(false);
+        Icons.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeIcons()
+    {
+        Profile.SetActive(true);
+        Icons.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openIcons1()
+    {
+        Icons1.SetActive(true);
+        Icons2.SetActive(false);
+        Icons3.SetActive(false);
+    }
+
+    public void openIcons2()
+    {
+        Icons1.SetActive(false);
+        Icons2.SetActive(true);
+        Icons3.SetActive(false);
+    }
+
+    public void openIcons3()
+    {
+        Icons1.SetActive(false);
+        Icons2.SetActive(false);
+        Icons3.SetActive(true);
+    }
+
+    public void openSprays()
+    {
+        Alert.SetActive(false);
+        Values.SetActive(false);
+        Buttons.SetActive(false);
+        BrawlerSetting.SetActive(false);
+        Sprays.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void openSprays1()
+    {
+        Sprays1.SetActive(true);
+        Sprays2.SetActive(false);
+    }
+
+    public void openSprays2()
+    {
+        Sprays1.SetActive(false);
+        Sprays2.SetActive(true);
+    }
+
+    public void closeSprays()
+    {
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Sprays.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    /*public void openTitles()
+    {
+        Alert.SetActive(false);
+        Values.SetActive(false);
+        Buttons.SetActive(false);
+        GiftObject.SetActive(false);
+        Titles.SetActive(true);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void closeTitles()
+    {
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        GiftObject.SetActive(true);
+        Titles.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }*/
+
+    public void chooseGM(int i)
+    {
+        YG2.saves.CurrentGM = i;
+        YG2.SaveProgress();
+        GetLoad();
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Choose.SetActive(false);
+        BG.sprite = RareBG;
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void chooseBrawler(int i)
+    {
+        YG2.saves.currentBrawler = i;
+        YG2.SaveProgress();
+        GetLoad();
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Brawlers.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void chooseSkin(int brawler, int i)
+    {
+
+        switch (brawler)
+        {
+            case 0:
+                YG2.saves.shellySkin = i;
+                break;
+            case 1:
+                YG2.saves.nitaSkin = i;
+                break;
+            case 2:
+                YG2.saves.coltSkin = i;
+                break;
+            case 3:
+                YG2.saves.bullSkin = i;
+                break;
+            case 4:
+                YG2.saves.brockSkin = i;
+                break;
+            case 5:
+                YG2.saves.barleySkin = i;
+                break;
+            case 6:
+                YG2.saves.pocoSkin = i;
+                break;
+            case 7:
+                YG2.saves.dynamikeSkin = i;
+                break;
+            case 8:
+                YG2.saves.piperSkin = i;
+                break;
+            case 9:
+                YG2.saves.edgarSkin = i;
+                break;
+            case 10:
+                YG2.saves.crowSkin = i;
+                break;
+            case 11:
+                YG2.saves.griffSkin = i;
+                break;
+            case 12:
+                YG2.saves.elprimoSkin = i;
+                break;
+            case 13:
+                YG2.saves.taraSkin = i;
+                break;
+        }
+        YG2.SaveProgress();
+        GetLoad();
+        Skins.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void choosePin(int i)
+    {
+        YG2.saves.currentPin = i;
+        YG2.SaveProgress();
+        GetLoad();
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Pins.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void chooseIcon(int i)
+    {
+        YG2.saves.currentIcon = i;
+        YG2.SaveProgress();
+        GetLoad();
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Icons.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void chooseSpray(int i)
+    {
+        YG2.saves.currentSpray = i;
+        YG2.SaveProgress();
+        GetLoad();
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+        Sprays.SetActive(false);
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    IEnumerator disableInteractable()
+    {
+        GtButton.interactable = false;
+        yield return new WaitForSeconds(0.3f);
+        GtButton.interactable = true;
+    }
+
+    public void openChannel()
+    {
+        Application.OpenURL("https://t.me/tdev_yg");
+        GiveRewardByType("Gems", 500);
+        YG2.saves.isView = true;
+        YG2.SaveProgress();
+        GetLoad();
+        MainSource.PlayOneShot(gemsSound);
+    }
+
+    public void buyTicket()
+    {
+        if (YG2.saves.Coins >= 2000)
+        {
+            YG2.saves.Coins -= 2000;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+    }
+
+    public void Back()
+    {
+        if (Place == 1)
+        {
+            Shop.SetActive(true);
+            Values.SetActive(true);
+            Loot.SetActive(false);
+            LootBrawlers.SetActive(false);
+            LootSkins.SetActive(false);
+            LootPins.SetActive(false);
+            LootIcons.SetActive(false);
+            LootSprays.SetActive(false);
+            LootTitles.SetActive(false);
+            LootGems.SetActive(false);
+            LootCredits.SetActive(false);
+            LootCoins.SetActive(false);
+            GtButton.interactable = true;
+            UpgradeChanceText.gameObject.SetActive(true);
+            UpgradeChance1.gameObject.SetActive(true);
+            UpgradeChance2.gameObject.SetActive(true);
+            UpgradeChance3.gameObject.SetActive(true);
+            UpgradeChance4.gameObject.SetActive(true);
+            UpgradeUsed1.gameObject.SetActive(false);
+            UpgradeUsed2.gameObject.SetActive(false);
+            UpgradeUsed3.gameObject.SetActive(false);
+            UpgradeUsed4.gameObject.SetActive(false);
+            RareText.SetActive(true);
+            SuperrareText.SetActive(false);
+            EpicText.SetActive(false);
+            MythicText.SetActive(false);
+            LegendaryText.SetActive(false);
+            BG.sprite = SuperrareBG;
+            SDObject.gameObject.transform.localScale = new Vector3(1, 1, 1);
+            used = 0;
+            rarity = 0;
+            readyToOpen = false;
+        }
+        else if (Place == 2)
+        {
+            BrawlPass.SetActive(true);
+            Values.SetActive(true);
+            Loot.SetActive(false);
+            LootBrawlers.SetActive(false);
+            LootSkins.SetActive(false);
+            LootPins.SetActive(false);
+            LootIcons.SetActive(false);
+            LootSprays.SetActive(false);
+            LootTitles.SetActive(false);
+            LootGems.SetActive(false);
+            LootCredits.SetActive(false);
+            LootCoins.SetActive(false);
+            GtButton.interactable = true;
+            UpgradeChanceText.gameObject.SetActive(true);
+            UpgradeChance1.gameObject.SetActive(true);
+            UpgradeChance2.gameObject.SetActive(true);
+            UpgradeChance3.gameObject.SetActive(true);
+            UpgradeChance4.gameObject.SetActive(true);
+            UpgradeUsed1.gameObject.SetActive(false);
+            UpgradeUsed2.gameObject.SetActive(false);
+            UpgradeUsed3.gameObject.SetActive(false);
+            UpgradeUsed4.gameObject.SetActive(false);
+            RareText.SetActive(true);
+            SuperrareText.SetActive(false);
+            EpicText.SetActive(false);
+            MythicText.SetActive(false);
+            LegendaryText.SetActive(false);
+            BG.sprite = EpicBG;
+            SDObject.gameObject.transform.localScale = new Vector3(1, 1, 1);
+            used = 0;
+            rarity = 0;
+            readyToOpen = false;
+        }
+        else if (Place == 3)
+        {
+            StarrRoad.SetActive(true);
+            Values.SetActive(true);
+            Loot.SetActive(false);
+            LootBrawlers.SetActive(false);
+            LootSkins.SetActive(false);
+            LootPins.SetActive(false);
+            LootIcons.SetActive(false);
+            LootSprays.SetActive(false);
+            LootTitles.SetActive(false);
+            LootGems.SetActive(false);
+            LootCredits.SetActive(false);
+            LootCoins.SetActive(false);
+            BG.sprite = SuperrareBG;
+        }
+        else if (Place == 4)
+        {
+            Rewards.SetActive(true);
+            Values.SetActive(true);
+            Loot.SetActive(false);
+            LootBrawlers.SetActive(false);
+            LootSkins.SetActive(false);
+            LootPins.SetActive(false);
+            LootIcons.SetActive(false);
+            LootSprays.SetActive(false);
+            LootTitles.SetActive(false);
+            LootGems.SetActive(false);
+            LootCredits.SetActive(false);
+            LootCoins.SetActive(false);
+            BG.sprite = SuperrareBG;
+        }
+        else
+        {
+            Alert.SetActive(true);
+            BlackLine.SetActive(true);
+            Values.SetActive(true);
+            BrawlerSetting.SetActive(true);
+            Loot.SetActive(false);
+            LootBrawlers.SetActive(false);
+            LootSkins.SetActive(false);
+            LootPins.SetActive(false);
+            LootIcons.SetActive(false);
+            LootSprays.SetActive(false);
+            LootTitles.SetActive(false);
+            LootGems.SetActive(false);
+            LootCredits.SetActive(false);
+            LootCoins.SetActive(false);
+            Starrdrop.SetActive(false);
+            Buttons.SetActive(true);
+            BrawlerSetting.SetActive(true);
+            GtButton.interactable = true;
+            UpgradeChanceText.gameObject.SetActive(true);
+            UpgradeChance1.gameObject.SetActive(true);
+            UpgradeChance2.gameObject.SetActive(true);
+            UpgradeChance3.gameObject.SetActive(true);
+            UpgradeChance4.gameObject.SetActive(true);
+            UpgradeUsed1.gameObject.SetActive(false);
+            UpgradeUsed2.gameObject.SetActive(false);
+            UpgradeUsed3.gameObject.SetActive(false);
+            UpgradeUsed4.gameObject.SetActive(false);
+            RareText.SetActive(true);
+            SuperrareText.SetActive(false);
+            EpicText.SetActive(false);
+            MythicText.SetActive(false);
+            LegendaryText.SetActive(false);
+            BG.sprite = RareBG;
+            SDObject.gameObject.transform.localScale = new Vector3(1, 1, 1);
+            used = 0;
+            rarity = 0;
+            readyToOpen = false;
+        }
+
+        for (int i = 0; i < YG2.saves.Brawlers.Length; i++)
+        {
+            LootBrawlers.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < YG2.saves.Skins.Length; i++)
+        {
+            LootSkins.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < YG2.saves.Pins.Length; i++)
+        {
+            LootPins.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < YG2.saves.Icons.Length; i++)
+        {
+            LootIcons.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < YG2.saves.Sprays.Length; i++)
+        {
+            LootSprays.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < YG2.saves.Titles.Length; i++)
+        {
+            LootTitles.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+        canOpenBox = true;
+        GetLoad();
+    }
+
+    void Rewarded(string id)
+    {
+        if (id == "2")
+        {
+            Place = 1;
+            GiveRewardByType("Gems", 50);
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+    }
+
+    public void UpgradeGift(bool isPaid)
+    {
+        if (isPaid)
+        {
+            if (YG2.saves.Gems >= 300 && rarity != 4 && used != 4)
+            {
+                YG2.saves.Gems -= 300;
+                rarity++;
+                used++;
+                GiftOpen(true);
+                YG2.SaveProgress();
+                GetLoad();
+            }
+        }
+        else
+        {
+            if (rarity != 4 && used != 4)
+            {
+                YG2.RewardedAdvShow("1");
+            }
+        }
+    }
+
+    public void AddGems()
+    {
+        YG2.RewardedAdvShow("2");
+    }
+
+    public void AddCredits()
+    {
+        YG2.RewardedAdvShow("3");
+    }
+
+    public void BuyFromShop(int type)
+    {
+        if (type == 0 && YG2.saves.Coins >= 700)
+        {
+            YG2.saves.Coins -= 700;
+            Place = 1;
+            openSD();
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (type == 1 && YG2.saves.Coins >= 300)
+        {
+            YG2.saves.Coins -= 300;
+            Place = 1;
+            openBox(0);
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (type == 2 && YG2.saves.Gems >= 49)
+        {
+            YG2.saves.Gems -= 49;
+            Place = 1;
+            openBox(1);
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (type == 3 && YG2.saves.Gems >= 129)
+        {
+            YG2.saves.Gems -= 129;
+            Place = 1;
+            openBox(2);
+            YG2.SaveProgress();
+            GetLoad();
+        }
+    }
+
+    public void BuyCoins()
+    {
+        if (YG2.saves.Credits >= 1000)
+        {
+            Place = 1;
+            YG2.saves.Credits -= 1000;
+            GiveRewardByType("Coins", 3000);
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+    }
+
+    void SuccessPurchased(string id)
+    {
+        if (id == "1")
+        {
+            openBox(3);
+            Place = 1;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        if (id == "2")
+        {
+            Place = 1;
+            GiveRewardByType("Gems", 950);
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+    }
+
+    public void BuyGems1()
+    {
+        if (YG2.saves.Credits >= 1000)
+        {
+            Place = 1;
+            YG2.saves.Credits -= 1000;
+            GiveRewardByType("Gems", 100);
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+    }
+
+    public void OpenUrl()
+    {
+        Application.OpenURL("https://t.me/tdev_yg");
+    }
+
+    public void CheckPromocode()
+    {
+        if (PromocodesInputField.text == "NEW2025")
+        {
+            /*if (YG2.saves.Promo1 == false)
+            {
+                YG2.saves.Gems += 2025;
+                YG2.saves.Promo1 = true;
+                YG2.SaveProgress();
+                GetLoad();
+                succesfully();
+                MainSource.PlayOneShot(Open);
+            }
+            else
+            {
+                alreadyEntered();
+            }*/
+        }
+        else
+        {
+            if (YandexGame.EnvironmentData.language == "ru")
+            {
+                PromocodesInputText.text = "Ошибка!";
+            }
+            else if (YandexGame.EnvironmentData.language == "en")
+            {
+                PromocodesInputText.text = "Error!";
+            }
+            else if (YandexGame.EnvironmentData.language == "tr")
+            {
+                PromocodesInputText.text = "Hata!";
+            }
+            else if (YandexGame.EnvironmentData.language == "de")
+            {
+                PromocodesInputText.text = "Fehler!";
+            }
+            else if (YandexGame.EnvironmentData.language == "es")
+            {
+                PromocodesInputText.text = "¡Error!";
+            }
+        }
+        PromocodesInputField.text = "";
+    }
+
+    void succesfully()
+    {
+        if (YandexGame.EnvironmentData.language == "ru")
+        {
+            PromocodesInputText.text = "Успешно!";
+        }
+        else if (YandexGame.EnvironmentData.language == "en")
+        {
+            PromocodesInputText.text = "Successfully!";
+        }
+        else if (YandexGame.EnvironmentData.language == "tr")
+        {
+            PromocodesInputText.text = "Başarılı!";
+        }
+        else if (YandexGame.EnvironmentData.language == "de")
+        {
+            PromocodesInputText.text = "Erfolgreich!";
+        }
+        else if (YandexGame.EnvironmentData.language == "es")
+        {
+            PromocodesInputText.text = "¡Éxito!";
+        }
+    }
+
+    void alreadyEntered()
+    {
+        if (YandexGame.EnvironmentData.language == "ru")
+        {
+            PromocodesInputText.text = "Уже был введен!";
+        }
+        else if (YandexGame.EnvironmentData.language == "en")
+        {
+            PromocodesInputText.text = "Has already been entered!";
+        }
+        else if (YandexGame.EnvironmentData.language == "tr")
+        {
+            PromocodesInputText.text = "Zaten tanıtıldı!";
+        }
+        else if (YandexGame.EnvironmentData.language == "de")
+        {
+            PromocodesInputText.text = "Wie bereits eingegeben!";
+        }
+        else if (YandexGame.EnvironmentData.language == "es")
+        {
+            PromocodesInputText.text = "¡Ya se ha introducido!";
+        }
+    }
+
+    public void editMusic()
+    {
+        if (YG2.saves.musicOn == true)
+        {
+            YG2.saves.musicOn = false;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else
+        {
+            YG2.saves.musicOn = true;
+            YG2.SaveProgress();
+            GetLoad();
+
+        }
+    }
+
+    public void editSounds()
+    {
+        if (YG2.saves.soundsOn == true)
+        {
+            YG2.saves.soundsOn = false;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else
+        {
+            YG2.saves.soundsOn = true;
+            YG2.SaveProgress();
+            GetLoad();
+
+        }
+    }
+
+    public void BuyBP()
+    {
+        if (YG2.saves.Gems >= 1490)
+        {
+            YG2.saves.Gems -= 1490;
+            YG2.saves.bp1Buyed = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+    }
+
+    public void AwardBP(int value)
+    {
+        Place = 2; 
+        if (value == 1)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Free[0] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 2)
+        {
+            GiveRewardByType("Gems", 50);
+            YG2.saves.BP1Free[1] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 3)
+        {
+            openBox(0);
+            Place = 2;
+            YG2.saves.BP1Free[2] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 4)
+        {
+            GiveRewardByType("Coins", 1000);
+            YG2.saves.BP1Free[3] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 5)
+        {
+            GiveRewardByType("Credits", 500);
+            YG2.saves.BP1Free[4] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 6)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Free[5] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 7)
+        {
+            GiveRewardByType("Gems", 50);
+            YG2.saves.BP1Free[6] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 8)
+        {
+            openBox(0);
+            Place = 2;
+            YG2.saves.BP1Free[7] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 9)
+        {
+            GiveRewardByType("Coins", 1000);
+            YG2.saves.BP1Free[8] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 10)
+        {
+            GiveRewardByType("Credits", 500);
+            YG2.saves.BP1Free[9] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 11)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Free[10] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 12)
+        {
+            GiveRewardByType("Gems", 50);
+            YG2.saves.BP1Free[11] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 13)
+        {
+            openBox(0);
+            Place = 2;
+            YG2.saves.BP1Free[12] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 14)
+        {
+            GiveRewardByType("Coins", 1000);
+            YG2.saves.BP1Free[13] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 15)
+        {
+            GiveRewardByType("Credits", 500);
+            YG2.saves.BP1Free[14] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 16)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Free[15] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 17)
+        {
+            GiveRewardByType("Gems", 50);
+            YG2.saves.BP1Free[16] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 18)
+        {
+            openBox(0);
+            Place = 2;
+            YG2.saves.BP1Free[17] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 19)
+        {
+            GiveRewardByType("Coins", 1000);
+            YG2.saves.BP1Free[18] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 20)
+        {
+            GiveRewardByType("Credits", 500);
+            YG2.saves.BP1Free[19] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 21)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Free[20] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 22)
+        {
+            GiveRewardByType("Gems", 50);
+            YG2.saves.BP1Free[21] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 23)
+        {
+            openBox(0);
+            Place = 2;
+            YG2.saves.BP1Free[22] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 24)
+        {
+            GiveRewardByType("Coins", 1000);
+            YG2.saves.BP1Free[23] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 25)
+        {
+            GiveRewardByType("Credits", 500);
+            YG2.saves.BP1Free[24] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 26)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Free[25] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 27)
+        {
+            GiveRewardByType("Gems", 50);
+            YG2.saves.BP1Free[26] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 28)
+        {
+            openBox(0);
+            Place = 2;
+            YG2.saves.BP1Free[27] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 29)
+        {
+            GiveRewardByType("Coins", 1000);
+            YG2.saves.BP1Free[28] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 30)
+        {
+            openBox(2);
+            YG2.saves.BP1Free[29] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 31)
+        {
+            openBox(2);
+            Place = 2;
+            YG2.saves.BP1Paid[0] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 32)
+        {
+            GiveRewardByType("Gems", 150);
+            YG2.saves.BP1Paid[1] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 33)
+        {
+            openBox(1);
+            Place = 2;
+            YG2.saves.BP1Paid[2] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 34)
+        {
+            GiveRewardByType("Credits", 1000);
+            YG2.saves.BP1Paid[3] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 35)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Paid[4] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 36)
+        {
+            openBox(2);
+            Place = 2;
+            YG2.saves.BP1Paid[5] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 37)
+        {
+            GiveRewardByType("Gems", 150);
+            YG2.saves.BP1Paid[6] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 38)
+        {
+            openBox(1);
+            Place = 2;
+            YG2.saves.BP1Paid[7] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 39)
+        {
+            GiveRewardByType("Credits", 1000);
+            YG2.saves.BP1Paid[8] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 40)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Paid[9] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 41)
+        {
+            GiveRewardByType("Gems", 150);
+            YG2.saves.BP1Paid[10] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 42)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Paid[11] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 43)
+        {
+            openBox(2);
+            Place = 2;
+            YG2.saves.BP1Paid[12] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 44)
+        {
+            openBox(1);
+            Place = 2;
+            YG2.saves.BP1Paid[13] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 45)
+        {
+            openBox(3);
+            Place = 2;
+            YG2.saves.BP1Paid[14] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 46)
+        {
+            openBox(2);
+            Place = 2;
+            YG2.saves.BP1Paid[15] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 47)
+        {
+            GiveRewardByType("Gems", 150);
+            YG2.saves.BP1Paid[16] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 48)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Paid[17] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 49)
+        {
+            GiveRewardByType("Gems", 150);
+            YG2.saves.BP1Paid[18] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 50)
+        {
+            openBox(1);
+            Place = 2;
+            YG2.saves.BP1Paid[19] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 51)
+        {
+            openBox(2);
+            Place = 2;
+            YG2.saves.BP1Paid[20] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 52)
+        {
+            openBox(1);
+            YG2.saves.BP1Paid[21] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 53)
+        {
+            GiveRewardByType("Credits", 1000);
+            YG2.saves.BP1Paid[22] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 54)
+        {
+            GiveRewardByType("Gems", 150);
+            Place = 2;
+            YG2.saves.BP1Paid[23] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(gemsSound);
+        }
+        else if (value == 55)
+        {
+            GiveRewardByType("Credits", 1000);
+            YG2.saves.BP1Paid[24] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 56)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Paid[25] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 57)
+        {
+            openSD();
+            Place = 2;
+            YG2.saves.BP1Paid[26] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(Open);
+        }
+        else if (value == 58)
+        {
+            openBox(2);
+            Place = 2;
+            YG2.saves.BP1Paid[27] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        else if (value == 59)
+        {
+            GiveRewardByType("Credits", 1000);
+            YG2.saves.BP1Paid[28] = true;
+            YG2.SaveProgress();
+            GetLoad();
+            MainSource.PlayOneShot(coinsCreditsSound);
+        }
+        else if (value == 60)
+        {
+            openBox(3);
+            Place = 2;
+            YG2.saves.BP1Paid[29] = true;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+    }
+
+    public void AwardSR(int value)
+    {
+        Place = 3;
+        YG2.saves.StarrRoad[value] = true;
+        YG2.SaveProgress();
+        GetLoad();
+
+        switch (value)
+        {
+            case 0: GiveRewardByType("Icons", index: 0); break;
+            case 1: GiveRewardByType("Pins", index: 0); break;
+            case 2: GiveRewardByType("Icons", index: 1); break;
+            case 3: GiveRewardByType("Coins", amount: 5000); break;
+            case 4: GiveRewardByType("Brawlers", index: 1); break;
+            case 5: GiveRewardByType("Pins", index: 1); break;
+            case 6: GiveRewardByType("Icons", index: 2); break;
+            case 7: GiveRewardByType("Gems", amount: 700); break;
+            case 8: GiveRewardByType("Pins", index: 2); break;
+            case 9: GiveRewardByType("Brawlers", index: 2); break;
+            case 10: GiveRewardByType("Icons", index: 3); break;
+            case 11: GiveRewardByType("Pins", index: 3); break;
+            case 12: GiveRewardByType("Coins", amount: 5000); break;
+            case 13: GiveRewardByType("Gems", amount: 700); break;
+            case 14: GiveRewardByType("Icons", index: 4); break;
+            case 15: GiveRewardByType("Brawlers", index: 3); break;
+            case 16: GiveRewardByType("Pins", index: 4); break;
+            case 17: GiveRewardByType("Icons", index: 5); break;
+            case 18: GiveRewardByType("Gems", amount: 900); break;
+            case 19: GiveRewardByType("Brawlers", index: 4); break;
+            case 20: GiveRewardByType("Icons", index: 6); break;
+            case 21: GiveRewardByType("Pins", index: 5); break;
+            case 22: GiveRewardByType("Coins", amount: 7500); break;
+            case 23: GiveRewardByType("Icons", index: 7); break;
+            case 24: GiveRewardByType("Brawlers", index: 5); break;
+            case 25: GiveRewardByType("Pins", index: 6); break;
+            case 26: GiveRewardByType("Icons", index: 8); break;
+            case 27: GiveRewardByType("Gems", amount: 1200); break;
+            case 28: GiveRewardByType("Brawlers", index: 6); break;
+            case 29: GiveRewardByType("Brawlers", index: 7); break;
+            case 30: GiveRewardByType("Icons", index: 9); break;
+            case 31: GiveRewardByType("Pins", index: 7); break;
+            case 32: GiveRewardByType("Coins", amount: 9000); break;
+            case 33: GiveRewardByType("Gems", amount: 1200); break;
+            case 34: GiveRewardByType("Icons", index: 10); break;
+            case 35: GiveRewardByType("Brawlers", index: 8); break;
+            case 36: GiveRewardByType("Pins", index: 8); break;
+            case 37: GiveRewardByType("Icons", index: 11); break;
+            case 38: GiveRewardByType("Icons", index: 12); break;
+            case 39: GiveRewardByType("Brawlers", index: 9); break;
+            case 40: GiveRewardByType("Pins", index: 9); break;
+            case 41: GiveRewardByType("Icons", index: 13); break;
+            case 42: GiveRewardByType("Brawlers", index: 11); break;
+            case 43: GiveRewardByType("Icons", index: 14); break;
+            case 44: GiveRewardByType("Brawlers", index: 10); break;
+            default:
+                Debug.LogWarning("Неизвестное значение value в AwardSR: " + value);
+                break;
+        }
+    }
+
+    IEnumerator timerReward()
+    {
+        yield return new WaitForSeconds(1);
+        if (YG2.saves.timeToReward > 0)
+        {
+            YG2.saves.timeToReward -= 1;
+            YG2.SaveProgress();
+            GetLoad();
+        }
+        StartCoroutine(timerReward());
+    }
+
+    IEnumerator saveLB()
+    {
+        yield return new WaitForSeconds(2);
+        for (; YG2.saves.timeOfSave > 0; YG2.saves.timeOfSave -= 1)
+        {
+            YG2.SaveProgress();
+            yield return new WaitForSeconds(1);
+        }
+        YG2.saves.timeOfSave = 30;
+        YG2.SaveProgress();
+        YG2.SetLeaderboard("Trophies", Convert.ToInt32(YG2.saves.NowTrophies));
+        StartCoroutine(saveLB());
+    }
+
+    public void OpenUrlDev()
+    {
+        YG2.OnDeveloperURL();
+    }
+
+    void UpdateRankVisuals(int trophies)
+    {
+        int rank = Mathf.Clamp(trophies / 100 + 1, 1, 50);
+        int currentRankStart = (rank - 1) * 100;
+
+        rankText.text = rank.ToString();
+
+        float fill = (trophies - currentRankStart) / 100f;
+        trophyBar.fillAmount = Mathf.Clamp01(fill);
+
+        if (rank == 50)
+        {
+            rankImage.sprite = specialSprite50;
+            rankImage.color = Color.white;
+        }
+        else if (rank >= 45)
+        {
+            rankImage.sprite = specialSprite45to49;
+            rankImage.color = Color.white;
+        }
+        else
+        {
+            rankImage.sprite = defaultRankSprite;
+
+            if (rank <= 4)
+                rankImage.color = rankColors[0];
+            else if (rank <= 9)
+                rankImage.color = rankColors[1];
+            else if (rank <= 14)
+                rankImage.color = rankColors[2];
+            else if (rank <= 19)
+                rankImage.color = rankColors[3];
+            else if (rank <= 24)
+                rankImage.color = rankColors[4];
+            else if (rank <= 29)
+                rankImage.color = rankColors[5];
+            else if (rank <= 34)
+                rankImage.color = rankColors[6];
+            else if (rank <= 39)
+                rankImage.color = rankColors[7];
+            else
+                rankImage.color = rankColors[8];
+        }
+    }
+
+    public void UpdateWinRankVisuals(int trophies)
+    {
+        int rank = Mathf.Clamp((trophies / 100) + 1, 1, 50);
+
+        WinRankText.text = rank.ToString();
+
+        if (rank - 1 < rankColors.Length)
+            WinRankText.color = rankColors[rank - 1];
+        else
+            WinRankText.color = Color.white;
+
+        if (rank == 50)
+        {
+            WinRankImage.sprite = specialSprite50;
+        }
+        else if (rank >= 45)
+        {
+            WinRankImage.sprite = specialSprite45to49;
+        }
+        else
+        {
+            WinRankImage.sprite = defaultRankSprite;
+        }
+    }
+
+    public void HandleGameResult(int place)
+    {
+        YG2.saves.lastPlace = place;
+        YG2.saves.isGameEnded = true;
+
+        int brawlerIndex = YG2.saves.currentBrawler;
+        int currentTrophies = YG2.saves.Trophies[brawlerIndex];
+        int trophiesChange = 0;
+
+        if (YG2.saves.CurrentGM == 0)
+        {
+            if (place == 0)
+            {
+                trophiesChange = 50;
+                YG2.saves.bp1Opened += 100;
+                YG2.saves.Wins3v3++;
+            }
+            else
+            {
+                trophiesChange = -20;
+            }
+        }
+        else
+        {
+            switch (place)
+            {
+                case 0:
+                    trophiesChange = 50;
+                    YG2.saves.bp1Opened += 100;
+                    YG2.saves.WinsSolo++;
+                    break;
+                case 1:
+                    trophiesChange = 40;
+                    YG2.saves.bp1Opened += 80;
+                    YG2.saves.WinsSolo++;
+                    break;
+                case 2:
+                    trophiesChange = 30;
+                    YG2.saves.bp1Opened += 60;
+                    YG2.saves.WinsSolo++;
+                    break;
+                case 3:
+                    trophiesChange = 10;
+                    break;
+                case 4:
+                    trophiesChange = 5;
+                    break;
+                case 5:
+                    trophiesChange = -10;
+                    break;
+                case 6:
+                    trophiesChange = -15;
+                    break;
+                case 7:
+                    trophiesChange = -20;
+                    break;
+                case 8:
+                    trophiesChange = -25;
+                    break;
+                case 9:
+                    trophiesChange = -30;
+                    break;
+            }
+        }
+        if (currentTrophies + trophiesChange < 0)
+        {
+            trophiesChange = -currentTrophies;
+        }
+        YG2.saves.Trophies[brawlerIndex] += trophiesChange;
+        YG2.saves.NowTrophies += trophiesChange;
+        YG2.saves.TotalTrophies += trophiesChange;
+        UpdateWinScreen(place, trophiesChange);
+        YG2.SaveProgress();
+        SceneManager.LoadScene("Menu");
+    }
+
+    private void UpdateWinScreen(int place, int trophiesChange)
+    {
+        int brawlerIndex = YG2.saves.currentBrawler;
+        int currentTrophies = YG2.saves.Trophies[brawlerIndex];
+
+        WinRankText.text = (currentTrophies / 100 + 1).ToString();
+        WinTrophiesText.text = currentTrophies.ToString();
+
+        if (trophiesChange >= 0)
+        {
+            WinTrophiesChangeText.text = "+" + trophiesChange.ToString();
+            WinTrophiesChangeText.color = Color.green;
+            WinVictoryObject.SetActive(true);
+            WinDefeatObject.SetActive(false);
+        }
+        else
+        {
+            WinTrophiesChangeText.text = trophiesChange.ToString();
+            WinTrophiesChangeText.color = Color.red;
+            WinVictoryObject.SetActive(false);
+            WinDefeatObject.SetActive(true);
+        }
+
+        int rank = Mathf.Clamp(currentTrophies / 100 + 1, 1, 50);
+        if (rank == 50)
+        {
+            WinRankImage.sprite = specialSprite50;
+            WinRankImage.color = Color.white;
+        }
+        else if (rank >= 45)
+        {
+            WinRankImage.sprite = specialSprite45to49;
+            WinRankImage.color = Color.white;
+        }
+        else
+        {
+            WinRankImage.sprite = defaultRankSprite;
+
+            if (rank <= 4)
+                WinRankImage.color = rankColors[0];
+            else if (rank <= 9)
+                WinRankImage.color = rankColors[1];
+            else if (rank <= 14)
+                WinRankImage.color = rankColors[2];
+            else if (rank <= 19)
+                WinRankImage.color = rankColors[3];
+            else if (rank <= 24)
+                WinRankImage.color = rankColors[4];
+            else if (rank <= 29)
+                WinRankImage.color = rankColors[5];
+            else if (rank <= 34)
+                WinRankImage.color = rankColors[6];
+            else if (rank <= 39)
+                WinRankImage.color = rankColors[7];
+            else
+                WinRankImage.color = rankColors[8];
+        }
+    }
+
+    public void closeWin()
+    {
+        YG2.saves.isGameEnded = false;
+        YG2.saves.lastPlace = 0;
+
+        Win.SetActive(false);
+        Alert.SetActive(true);
+        Values.SetActive(true);
+        Buttons.SetActive(true);
+        BrawlerSetting.SetActive(true);
+
+        if (YG2.isTimerAdvCompleted) YG2.InterstitialAdvShow();
+    }
+
+    public void GetLoad()
+    {
+        Gems.text = YG2.saves.Gems.ToString();
+        Credits.text = YG2.saves.Credits.ToString();
+        Coins.text = YG2.saves.Coins.ToString();
+        NowTrophies.text = YG2.saves.NowTrophies.ToString();
+        TotalTrophies.text = YG2.saves.TotalTrophies.ToString();
+        Name.text = YG2.saves.playerName;
+        if (YG2.saves.playerName != "") Name1.text = YG2.saves.playerName;
+
+        TotalSD.text = YG2.saves.OpenedSD.ToString();
+        TotalB.text = YG2.saves.OpenedB.ToString();
+        TotalBB.text = YG2.saves.OpenedBB.ToString();
+        TotalMB.text = YG2.saves.OpenedMB.ToString();
+        TotalOB.text = YG2.saves.OpenedOB.ToString();
+
+        Wins3v3.text = YG2.saves.Wins3v3.ToString();
+        WinsSolo.text = YG2.saves.WinsSolo.ToString();
+
+        var iote1 = Enumerable.Range(0, YG2.saves.Skins.Length).Where(i => !YG2.saves.Skins[i]).ToList();
+        var iote2 = Enumerable.Range(0, YG2.saves.Icons.Length).Where(i => !YG2.saves.Icons[i]).ToList();
+        var iote3 = Enumerable.Range(0, YG2.saves.Pins.Length).Where(i => !YG2.saves.Pins[i]).ToList();
+        var iote4 = Enumerable.Range(0, YG2.saves.Sprays.Length).Where(i => !YG2.saves.Sprays[i]).ToList();
+        var iote5 = Enumerable.Range(0, YG2.saves.Brawlers.Length).Where(i => !YG2.saves.Brawlers[i]).ToList();
+        var iote6 = Enumerable.Range(0, YG2.saves.Titles.Length).Where(i => !YG2.saves.Titles[i]).ToList();
+
+        int[] questGoals = { 30, 10, 20, 100000 };
+        int[] rewards = { 1500, 750, 1500, 500 };
+
+        if (YG2.saves.isGameEnded)
+        {
+            Alert.SetActive(false);
+            Values.SetActive(false);
+            Buttons.SetActive(false);
+            BrawlerSetting.SetActive(false);
+            Win.SetActive(true);
+        }
+
+        for (int i = 0; i < TrophiesTexts.Length && i < YG2.saves.Trophies.Length; i++)
+        {
+            TrophiesTexts[i].text = YG2.saves.Trophies[i].ToString();
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            while (YG2.saves.Quests[i] >= questGoals[i])
+            {
+                YG2.saves.Quests[i] -= questGoals[i];
+                YG2.saves.bp1Opened += rewards[i];
+                YG2.saves.QuestsSeria[i]++;
+            }
+        }
+
+        for (int i = 0; i < QuestTexts.Length; i++)
+        {
+            if (QuestTexts[i] != null)
+            {
+                QuestTexts[i].text = YG2.saves.Quests[i] + "/" + questGoals[i];
+            }
+        }
+
+        for (int i = 0; i < QuestFills.Length; i++)
+        {
+            if (QuestFills[i] != null)
+            {
+                float fill = Mathf.Clamp01((float)YG2.saves.Quests[i] / questGoals[i]);
+                QuestFills[i].fillAmount = fill;
+            }
+        }
+
+        for (int i = 0; i < QuestSeriaTexts.Length; i++)
+        {
+            if (QuestSeriaTexts[i] != null)
+            {
+                QuestSeriaTexts[i].text = YG2.saves.QuestsSeria[i].ToString();
+            }
+        }
+
+        if (Progress != null)
+        {
+            if (YG2.saves.bp1Level == 30 || YG2.saves.bp1Opened >= YG2.saves.bp1Needed)
+                Progress.fillAmount = 1f;
+            else
+                Progress.fillAmount = (float)YG2.saves.bp1Opened / YG2.saves.bp1Needed;
+        }
+
+        for (int i = 0; i < TrophyFills.Length && i < trophyMilestones.Length; i++)
+        {
+            int milestone = trophyMilestones[i];
+            int prevMilestone = (i == 0) ? 0 : trophyMilestones[i - 1];
+
+            if (YG2.saves.TotalTrophies >= milestone)
+            {
+                TrophyFills[i].fillAmount = 1f;
+            }
+            else if (YG2.saves.TotalTrophies <= prevMilestone)
+            {
+                TrophyFills[i].fillAmount = 0f;
+            }
+            else
+            {
+                float progress = (float)(YG2.saves.TotalTrophies - prevMilestone) / (milestone - prevMilestone);
+                TrophyFills[i].fillAmount = Mathf.Clamp01(progress);
+            }
+        }
+
+        for (int i = 0; i < YG2.saves.StarrRoad.Length; i++)
+        {
+            if (YG2.saves.StarrRoad[i])
+            {
+                SRButtons[i].interactable = false;
+            }
+            else if (YG2.saves.TotalTrophies >= trophyMilestones[i])
+            {
+                SRButtons[i].interactable = true;
+            }
+            else
+            {
+                SRButtons[i].interactable = false;
+            }
+        }
+
+        int currentTime = YG2.saves.inGameTime;
+        bool allClaimed = true;
+        int nearestTimeLeft = int.MaxValue;
+        int nearestRewardIndex = -1;
+
+        for (int i = 0; i < 4; i++)
+        {
+            bool claimed = YG2.saves.AwardGot[i];
+            int timeLeft = rewardTimes[i] - currentTime;
+
+            if (claimed)
+            {
+                rewardButtons[i].interactable = false;
+                rewardTimers[i].text = "00:00";
+            }
+            else
+            {
+                allClaimed = false;
+
+                if (timeLeft <= 0)
+                {
+                    rewardButtons[i].interactable = true;
+                    rewardTimers[i].text = "00:00";
+                }
+                else
+                {
+                    rewardButtons[i].interactable = false;
+                    TimeSpan t = TimeSpan.FromSeconds(timeLeft);
+                    rewardTimers[i].text = t.ToString(@"mm\:ss");
+
+                    if (timeLeft < nearestTimeLeft)
+                    {
+                        nearestTimeLeft = timeLeft;
+                        nearestRewardIndex = i;
+                    }
+                }
+            }
+        }
+
+        if (nearestRewardIndex != -1)
+        {
+            int timeLeft = rewardTimes[nearestRewardIndex] - currentTime;
+            TimeSpan nearestRewardTime = TimeSpan.FromSeconds(timeLeft);
+            nearestReward.text = nearestRewardTime.ToString(@"mm\:ss");
+        }
+
+        if (allClaimed)
+        {
+            for (int i = 0; i < 4; i++)
+                YG2.saves.AwardGot[i] = false;
+
+            YG2.saves.inGameTime = 0;
+        }
+
+        for (int i = 0; i < GameModes.Length; i++)
+        {
+            GameModes[i].SetActive(i == YG2.saves.CurrentGM);
+        }
+
+        for (int i = 0; i < YG2.saves.Brawlers.Length; i++)
+        {
+            if (YG2.saves.Brawlers[i])
+            {
+                MyBrawlers[i].GetComponentInChildren<Button>().interactable = true;
+            }
+            else
+            {
+                MyBrawlers[i].GetComponentInChildren<Button>().interactable = false;
+            }
+        }
+
+        for (int i = 0; i < YG2.saves.Skins.Length; i++)
+        {
+            if (YG2.saves.Skins[i])
+            {
+                MySkins[i].GetComponentInChildren<Button>().interactable = true;
+            }
+            else
+            {
+                MySkins[i].GetComponentInChildren<Button>().interactable = false;
+            }
+        }
+
+        for (int i = 0; i < YG2.saves.Pins.Length; i++)
+        {
+            if (YG2.saves.Pins[i])
+            {
+                MyPins[i].GetComponentInChildren<Button>().interactable = true;
+            }
+            else
+            {
+                MyPins[i].GetComponentInChildren<Button>().interactable = false;
+            }
+        }
+
+        for (int i = 0; i < YG2.saves.Icons.Length; i++)
+        {
+            if (YG2.saves.Icons[i])
+            {
+                MyIcons[i].GetComponentInChildren<Button>().interactable = true;
+            }
+            else
+            {
+                MyIcons[i].GetComponentInChildren<Button>().interactable = false;
+            }
+        }
+
+        for (int i = 0; i < YG2.saves.Sprays.Length; i++)
+        {
+            if (YG2.saves.Sprays[i])
+            {
+                MySprays[i].GetComponentInChildren<Button>().interactable = true;
+            }
+            else
+            {
+                MySprays[i].GetComponentInChildren<Button>().interactable = false;
+            }
+        }
+
+        for (int i = 0; i < YG2.saves.Titles.Length; i++)
+        {
+            if (YG2.saves.Titles[i])
+            {
+                MyTitles[i].GetComponentInChildren<Button>().interactable = true;
+            }
+            else
+            {
+                MyTitles[i].GetComponentInChildren<Button>().interactable = false;
+            }
+        }
+
+        /*if (YG2.saves.specialPin223 == true)
+        {
+            CatalogPins.transform.GetChild(222).GetComponentInChildren<Button>().interactable = true;
+        }
+        if (YG2.saves.specialPin224 == true)
+        {
+            CatalogPins.transform.GetChild(223).GetComponentInChildren<Button>().interactable = true;
+        }
+        if (YG2.saves.specialIcon166 == true)
+        {
+            CatalogIcons.transform.GetChild(165).GetComponentInChildren<Button>().interactable = true;
+        }*/
+
+        if (YG2.saves.Brawlers.Length != 14)
+        {
+            bool[] newBooleanArray = new bool[YG2.saves.Brawlers.Length + (14 - YG2.saves.Brawlers.Length)];
+
+            Array.Copy(YG2.saves.Brawlers, newBooleanArray, YG2.saves.Brawlers.Length);
+
+            YG2.saves.Brawlers = newBooleanArray;
+
+            YG2.SaveProgress();
+        }
+
+        if (YG2.saves.Skins.Length != 42)
+        {
+            bool[] newBooleanArray = new bool[YG2.saves.Skins.Length + (42 - YG2.saves.Skins.Length)];
+
+            Array.Copy(YG2.saves.Skins, newBooleanArray, YG2.saves.Skins.Length);
+
+            YG2.saves.Skins = newBooleanArray;
+
+            YG2.SaveProgress();
+        }
+
+        if (YG2.saves.Pins.Length != 36)
+        {
+            bool[] newBooleanArray = new bool[YG2.saves.Pins.Length + (36 - YG2.saves.Pins.Length)];
+
+            Array.Copy(YG2.saves.Pins, newBooleanArray, YG2.saves.Pins.Length);
+
+            YG2.saves.Pins = newBooleanArray;
+
+            YG2.SaveProgress();
+        }
+
+        if (YG2.saves.Icons.Length != 29)
+        {
+            bool[] newBooleanArray = new bool[YG2.saves.Icons.Length + (29 - YG2.saves.Icons.Length)];
+
+            Array.Copy(YG2.saves.Icons, newBooleanArray, YG2.saves.Icons.Length);
+
+            YG2.saves.Icons = newBooleanArray;
+
+            YG2.SaveProgress();
+        }
+
+        if (YG2.saves.Sprays.Length != 16)
+        {
+            bool[] newBooleanArray = new bool[YG2.saves.Sprays.Length + (16 - YG2.saves.Sprays.Length)];
+
+            Array.Copy(YG2.saves.Sprays, newBooleanArray, YG2.saves.Sprays.Length);
+
+            YG2.saves.Sprays = newBooleanArray;
+
+            YG2.SaveProgress();
+        }
+
+        if (YG2.saves.Titles.Length != 0)
+        {
+            bool[] newBooleanArray = new bool[YG2.saves.Titles.Length + (0 - YG2.saves.Titles.Length)];
+
+            Array.Copy(YG2.saves.Titles, newBooleanArray, YG2.saves.Titles.Length);
+
+            YG2.saves.Titles = newBooleanArray;
+
+            YG2.SaveProgress();
+        }
+
+        if (YG2.saves.Trophies.Length != 14)
+        {
+            int[] newBooleanArray = new int[YG2.saves.Trophies.Length + (14 - YG2.saves.Trophies.Length)];
+
+            Array.Copy(YG2.saves.Trophies, newBooleanArray, YG2.saves.Trophies.Length);
+
+            YG2.saves.Trophies = newBooleanArray;
+
+            YG2.SaveProgress();
+        }
+
+        int index = YG2.saves.currentBrawler;
+        int[] trophiesArray = YG2.saves.Trophies;
+
+        Sprite[] skinData = {
+            YG2.saves.shellySkin > 0 ? SkinSprites[YG2.saves.shellySkin - 1] : BrawlerSprites[0],
+            YG2.saves.nitaSkin > 0   ? SkinSprites[YG2.saves.nitaSkin - 1]   : BrawlerSprites[1],
+            YG2.saves.coltSkin > 0   ? SkinSprites[YG2.saves.coltSkin - 1]   : BrawlerSprites[2],
+            YG2.saves.bullSkin > 0   ? SkinSprites[YG2.saves.bullSkin - 1]   : BrawlerSprites[3],
+            YG2.saves.brockSkin > 0  ? SkinSprites[YG2.saves.brockSkin - 1]  : BrawlerSprites[4],
+            YG2.saves.barleySkin > 0 ? SkinSprites[YG2.saves.barleySkin - 1] : BrawlerSprites[5],
+            YG2.saves.pocoSkin > 0   ? SkinSprites[YG2.saves.pocoSkin - 1]   : BrawlerSprites[6],
+            YG2.saves.dynamikeSkin > 0 ? SkinSprites[YG2.saves.dynamikeSkin - 1] : BrawlerSprites[7],
+            YG2.saves.piperSkin > 0  ? SkinSprites[YG2.saves.piperSkin - 1]  : BrawlerSprites[8],
+            YG2.saves.edgarSkin > 0  ? SkinSprites[YG2.saves.edgarSkin - 1]  : BrawlerSprites[9],
+            YG2.saves.crowSkin > 0   ? SkinSprites[YG2.saves.crowSkin - 1]   : BrawlerSprites[10],
+            YG2.saves.griffSkin > 0  ? SkinSprites[YG2.saves.griffSkin - 1]  : BrawlerSprites[11],
+            YG2.saves.elprimoSkin > 0  ? SkinSprites[YG2.saves.elprimoSkin - 1]  : BrawlerSprites[12],
+            YG2.saves.taraSkin > 0  ? SkinSprites[YG2.saves.taraSkin - 1]  : BrawlerSprites[13],
+        };
+
+        if (index >= 0 && index < trophiesArray.Length)
+        {
+            CurrentBrawler.sprite = skinData[index];
+            int trophies = trophiesArray[index];
+            Trophies.text = trophies.ToString();
+            UpdateRankVisuals(trophies);
+        }
+        else
+        {
+            CurrentBrawler.sprite = BrawlerSprites[0];
+            int trophies = trophiesArray[0];
+            Trophies.text = trophies.ToString();
+            UpdateRankVisuals(trophies);
+        }
+
+
+        CurrentPin.sprite = PinSprites[YG2.saves.currentPin];
+        CurrentPin1.sprite = PinSprites[YG2.saves.currentPin];
+
+        CurrentIcon.sprite = IconSprites[YG2.saves.currentIcon];
+        CurrentIcon1.sprite = IconSprites[YG2.saves.currentIcon];
+        CurrentIcon2.sprite = IconSprites[YG2.saves.currentIcon];
+
+        CurrentSpray.sprite = SpraySprites[YG2.saves.currentSpray];
+        CurrentSpray1.sprite = SpraySprites[YG2.saves.currentSpray];
+
+        if (YG2.saves.musicOn == true)
+        {
+            EditMusic.sprite = On;
+            MusicSource.volume = 0.15f;
+        }
+        else
+        {
+            EditMusic.sprite = Off;
+            MusicSource.volume = 0;
+        }
+
+        if (YG2.saves.soundsOn == true)
+        {
+            EditSounds.sprite = On;
+            MainSource.volume = 1;
+        }
+        else
+        {
+            EditSounds.sprite = Off;
+            MainSource.volume = 0;
+        }
+
+        if (YG2.saves.bp1Buyed == true)
+        {
+            BuyBrawlPass.interactable = false;
+        }
+
+        if (YG2.saves.bp1Buyed == true)
+        {
+            for (int i = 0; i < YG2.saves.BP1Paid.Length; i++)
+            {
+                if (YG2.saves.BP1Paid[i])
+                {
+                    PaidBP[i].interactable = false;
+                }
+                else
+                {
+                    if (YG2.saves.bp1Level >= i + 1)
+                    {
+                        PaidBP[i].interactable = true;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < YG2.saves.BP1Free.Length; i++)
+        {
+            if (YG2.saves.BP1Free[i])
+            {
+                FreeBP[i].interactable = false;
+            }
+            else
+            {
+                if (YG2.saves.bp1Level >= i + 1)
+                {
+                    FreeBP[i].interactable = true;
+                }
+            }
+        }
+
+        for (int i = 0; i < YG2.saves.bp1Level; i++)
+        {
+            LevelsBP[i].sprite = OpenedLevel;
+        }
+
+        if (YG2.saves.bp1Opened >= YG2.saves.bp1Needed & YG2.saves.bp1Level != 30)
+        {
+            int result = Mathf.FloorToInt((float)YG2.saves.bp1Opened/500);
+            int next = YG2.saves.bp1Opened - 500 * result;
+            YG2.saves.bp1Level += result;
+            YG2.saves.bp1Opened = next;
+        }
+
+        if (YG2.saves.bp1Level == 30)
+        {
+            BPCounter.SetActive(false);
+            BPCountObj.SetActive(false);
+            BPCountComplete.SetActive(true);
+        }
+        else
+        {
+            BPCount.text = YG2.saves.bp1Opened.ToString() + "/" + YG2.saves.bp1Needed.ToString();
+            BPCount1.text = YG2.saves.bp1Opened.ToString() + "/" + YG2.saves.bp1Needed.ToString();
+        }
+
+        LevelBP.text = YG2.saves.bp1Level.ToString();
+
+        int count1 = YG2.saves.Brawlers.Count(element => element == true);
+        int count2 = YG2.saves.Skins.Count(element => element == true);
+        int count3 = YG2.saves.Pins.Count(element => element == true);
+        int count4 = YG2.saves.Icons.Count(element => element == true);
+        int count5 = YG2.saves.Sprays.Count(element => element == true);
+        int count6 = YG2.saves.Titles.Count(element => element == true);
+
+        if (YG2.saves.isView)
+        {
+            ChannelReward.interactable = false;
+        }
+    }
+}
